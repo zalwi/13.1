@@ -2,14 +2,15 @@ package data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Competition {
     private String description;
-    private ArrayList<Player> players;
+    private List<Player> players;
 
     public Competition(String description) {
         this.description = description;
-        players = new ArrayList<Player>();
+        this.players = new ArrayList<Player>();
     }
 
     public void addPlayerResult(String firstName, String lastName, Integer points){

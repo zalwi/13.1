@@ -7,14 +7,52 @@ import java.util.Scanner;
 
 public class CompetitionOperator {
     private final static String FINISH_COMPETITIONS = "STOP";
+    private final static String TEST_PROGRAM = "TEST";
     private final static String SORT_DESCENDING = "1";
     private final static String SORT_ASCENDING = "2";
 
     public static void run(Competition competition) {
-        boolean reverseList = false;
+        boolean reverseList = chooseSortOption();
         boolean loop = true;
-        Scanner scanner = new Scanner(System.in);
+        do{loop = readPlayers(competition);} while (loop);
+        ReportCreator.generateReport("stats.csv", competition.printListOfPlayersInCsvFormat(reverseList));
+        System.out.println( "Dane posortowano i zapisano do pliku stats.csv.\n" +
+                            "Zawartość pliku po zapisie:");
+        System.out.println(competition.printListOfPlayersInCsvFormat(reverseList));
+    }
 
+    private static boolean readPlayers(Competition competition){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Podaj wynik kolejnego gracza (lub stop:koniec programu, test:dodaj dane testowe):");
+        String playerInfo = scanner.nextLine();
+
+        switch(playerInfo.toUpperCase()){
+            case FINISH_COMPETITIONS -> {
+                return false;
+            }
+            case TEST_PROGRAM -> {
+                fillTestData(competition);
+                System.out.println( "Wypełnionio listę zawodników testowymi danymi,\n" +
+                                    "możesz zakończyć program wpisując STOP lub dodać własnych zawodników do listy");
+                return true;
+            }
+            default -> {
+                String[] playerValues = playerInfo.split(" ");
+                if(validateInput(playerValues)){
+                    String  firstName   = playerValues[0],
+                            lastName    = playerValues[1];
+                    Integer points      = NumberUtils.createInteger(playerValues[2]);
+                    competition.addPlayerResult(firstName,lastName,points);
+                }
+                return true;
+            }
+        }
+    }
+
+    private static boolean chooseSortOption(){
+        Scanner scanner = new Scanner(System.in);
+        boolean loop = true;
+        boolean reverseList = false;
         do{
             System.out.println("Wybierz tryb sortowania wyników\n" +
                     "1. Malejąco\n" +
@@ -35,38 +73,16 @@ public class CompetitionOperator {
                 }
             }
         } while (loop);
+        return reverseList;
+    }
 
-        loop = true; //dla następnej pętli
-        do {
-            System.out.println("Podaj wynik kolejnego gracza (lub stop):");
-
-            String playerInfo = scanner.nextLine();
-            if(playerInfo.toUpperCase().equals(FINISH_COMPETITIONS)) {
-                loop = false;
-                // ---- test block ----
-                competition.addPlayerResult("Kamil", "Zalwert", 123);
-                competition.addPlayerResult("Maciej", "Agrafka", 77);
-                competition.addPlayerResult("Jan", "Kowalski", 56);
-                competition.addPlayerResult("Paweł", "Pierwszy", 34);
-                competition.addPlayerResult("Andrzej", "Drugi", 12);
-                competition.addPlayerResult("Andrzej", "Agrafka", 77);
-                // ---- end of test ----
-                ReportCreator.generateReport("stats.csv", competition.printListOfPlayersInCsvFormat(reverseList));
-                System.out.println("Dane posortowano i zapisano do pliku stats.csv.\n" +
-                        "Zawartość pliku po zapisie:");
-                System.out.println(competition.printListOfPlayersInCsvFormat(reverseList));
-                return;
-            }
-
-            String[] playerValues = playerInfo.split(" ");
-            if(validateInput(playerValues)){
-                String  firstName   = playerValues[0],
-                        lastName    = playerValues[1];
-                Integer points      = NumberUtils.createInteger(playerValues[2]);
-
-                competition.addPlayerResult(firstName,lastName,points);
-            }
-        } while (loop);
+    private static void fillTestData(Competition competition){
+        competition.addPlayerResult("Kamil", "Zalwert", 123);
+        competition.addPlayerResult("Maciej", "Agrafka", 77);
+        competition.addPlayerResult("Jan", "Kowalski", 56);
+        competition.addPlayerResult("Paweł", "Pierwszy", 34);
+        competition.addPlayerResult("Andrzej", "Drugi", 12);
+        competition.addPlayerResult("Andrzej", "Agrafka", 77);
     }
 
     private static boolean validateInput(String[] playerValues) {
@@ -93,6 +109,4 @@ public class CompetitionOperator {
         }
         return true;
     }
-
-
 }
