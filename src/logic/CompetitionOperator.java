@@ -10,8 +10,6 @@ public class CompetitionOperator {
     private final static String SORT_DESCENDING = "1";
     private final static String SORT_ASCENDING = "2";
 
-
-
     public static void run(Competition competition) {
         boolean reverseList = false;
         boolean loop = true;
@@ -42,7 +40,6 @@ public class CompetitionOperator {
             String playerInfo = scanner.nextLine();
             if(playerInfo.toUpperCase().equals(FINISH_COMPETITIONS)) {
                 loop = false;
-
                 // ---- test block ----
                 competition.addPlayerResult("Kamil", "Zalwert", 123);
                 competition.addPlayerResult("Maciej", "Agrafka", 77);
@@ -50,9 +47,11 @@ public class CompetitionOperator {
                 competition.addPlayerResult("Paweł", "Pierwszy", 34);
                 competition.addPlayerResult("Andrzej", "Drugi", 12);
                 competition.addPlayerResult("Andrzej", "Agrafka", 77);
-                System.out.println(competition.printListOfPlayersInCsvFormat(reverseList));
                 // ---- end of test ----
-
+                ReportCreator.generateReport("stats.csv", competition.printListOfPlayersInCsvFormat(reverseList));
+                System.out.println("Dane posortowano i zapisano do pliku stats.csv.\n" +
+                        "Zawartość pliku po zapisie:");
+                System.out.println(competition.printListOfPlayersInCsvFormat(reverseList));
                 return;
             }
 
