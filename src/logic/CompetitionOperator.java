@@ -20,16 +20,19 @@ public class CompetitionOperator {
                     "1. Malejąco\n" +
                     "2. Rosnąco");
             String sortOption = scanner.nextLine();
-
-            if(sortOption.toUpperCase().equals(SORT_DESCENDING)) {
-                System.out.println("Wybrano malejące sortowanie wyników");
-                loop = false;
-            }else if(sortOption.toUpperCase().equals(SORT_ASCENDING)){
-                System.out.println("Wybrano rosnące sortowanie wyników");
-                reverseList = true;
-                loop = false;
-            }else{
-                System.out.println("Wybrano zły numer: " + sortOption);
+            switch(sortOption.toUpperCase()) {
+                case SORT_DESCENDING -> {
+                    System.out.println("Wybrano malejące sortowanie wyników");
+                    loop = false;
+                }
+                case SORT_ASCENDING -> {
+                    System.out.println("Wybrano rosnące sortowanie wyników");
+                    reverseList = true;
+                    loop = false;
+                }
+                default -> {
+                    System.out.println("Wybrano zły numer: " + sortOption);
+                }
             }
         } while (loop);
 
